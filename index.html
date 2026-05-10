@@ -1,78 +1,378 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>The Crews SMP!</title>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Crews SMP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
-    body {
-      background: #0f172a;
-      color: white;
-      font-family: Arial;
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:        #5b8a3c;
+      --green-light:  #6fa83e;
+      --green-dark:   #3d5c1e;
+      --dirt:         #7a5230;
+      --bg:           #0b0f1a;
+      --card-bg:      #111827;
+      --card-border:  #1f2d45;
+      --text:         #e2eaf8;
+      --muted:        #6b82a8;
+      --badge-on:     #1b3523;
+      --badge-on-t:   #6fa83e;
+      --badge-on-b:   #3d6020;
+      --badge-blue:   #0f1e38;
+      --badge-blue-t: #5b9bd5;
+      --badge-blue-b: #1e3c6a;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Stars ── */
+    .stars {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        radial-gradient(1px 1px at  8% 12%, #fff5, transparent),
+        radial-gradient(1px 1px at 22% 44%, #fff3, transparent),
+        radial-gradient(1px 1px at 47%  9%, #fff6, transparent),
+        radial-gradient(1px 1px at 63% 61%, #fff3, transparent),
+        radial-gradient(1px 1px at 80% 28%, #fff4, transparent),
+        radial-gradient(1px 1px at 33% 78%, #fff2, transparent),
+        radial-gradient(1px 1px at 91% 83%, #fff3, transparent),
+        radial-gradient(1px 1px at 14% 87%, #fff4, transparent),
+        radial-gradient(1px 1px at 57% 52%, #fff2, transparent),
+        radial-gradient(1px 1px at 75%  5%, #fff3, transparent),
+        radial-gradient(1px 1px at  3% 55%, #fff2, transparent),
+        radial-gradient(1px 1px at 50% 90%, #fff3, transparent);
+    }
+
+    /* ── Pixel grid overlay ── */
+    .pixel-grid {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+
+    /* ── Card ── */
+    .card {
+      position: relative;
+      z-index: 1;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-top: 4px solid var(--green);
+      border-radius: 14px;
+      padding: 2.5rem 2.75rem;
+      width: 92%;
+      max-width: 440px;
       text-align: center;
-      padding-top: 100px;
+      animation: slideUp .5s cubic-bezier(.22,1,.36,1) both;
     }
 
-    .box {
-      background: #1e293b;
-      width: 500px;
-      margin: auto;
-      padding: 40px;
-      border-radius: 15px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    @keyframes slideUp {
+      from { opacity:0; transform: translateY(24px); }
+      to   { opacity:1; transform: translateY(0); }
     }
 
-    h1 {
-      font-size: 42px;
+    /* ── Grass block icon ── */
+    .block-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+    .block {
+      width: 56px;
+      height: 56px;
+      border-radius: 8px;
+      display: grid;
+      grid-template-rows: 14px 1fr;
+      overflow: hidden;
+      image-rendering: pixelated;
+      box-shadow: inset -3px -4px 0 rgba(0,0,0,.3), inset 3px 3px 0 rgba(255,255,255,.08);
+      animation: blockBob 3s ease-in-out infinite;
+    }
+    @keyframes blockBob {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-4px); }
+    }
+    .block-top    { background: #5b8a3c; }
+    .block-bottom { background: #7a5230; }
+
+    /* ── Title ── */
+    .title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 15px;
+      line-height: 1.7;
+      color: #fff;
+      margin-bottom: .4rem;
     }
 
-    p {
-      color: #cbd5e1;
+    .subtitle {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
     }
 
-    button {
-      background: #3b82f6;
-      color: white;
+    /* ── Badge row ── */
+    .badges {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 1.5rem;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11.5px;
+      padding: 4px 11px;
+      border-radius: 999px;
+      font-weight: 500;
+    }
+    .badge-green {
+      background: var(--badge-on);
+      color: var(--badge-on-t);
+      border: 1px solid var(--badge-on-b);
+    }
+    .badge-blue {
+      background: var(--badge-blue);
+      color: var(--badge-blue-t);
+      border: 1px solid var(--badge-blue-b);
+    }
+    .dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity:1; }
+      50%      { opacity:.4; }
+    }
+    .dot.offline { animation: none; background: #e24b4a; }
+
+    /* ── Info grid ── */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 1.5rem;
+    }
+    .info-cell {
+      background: #0c1220;
+      border: 1px solid #1a2840;
+      border-radius: 8px;
+      padding: 10px 13px;
+      text-align: left;
+    }
+    .info-label {
+      font-size: 10px;
+      color: #45607a;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      margin-bottom: 3px;
+    }
+    .info-value {
+      font-size: 13px;
+      color: #c8d8f0;
+      font-weight: 500;
+    }
+
+    /* ── Divider ── */
+    hr {
       border: none;
-      padding: 18px 30px;
-      border-radius: 10px;
-      font-size: 20px;
-      cursor: pointer;
-      margin-top: 20px;
+      border-top: 1px solid #1a2840;
+      margin-bottom: 1.5rem;
     }
 
-    button:hover {
-      background: #2563eb;
+    /* ── Button ── */
+    .renew-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      width: 100%;
+      padding: 13px 20px;
+      background: var(--green);
+      color: #fff;
+      border: none;
+      border-bottom: 4px solid var(--green-dark);
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: background .15s, transform .1s;
+      text-decoration: none;
+    }
+    .renew-btn:hover  { background: var(--green-light); }
+    .renew-btn:active { border-bottom-width: 2px; transform: translateY(2px); }
+
+    .btn-icon { font-size: 18px; }
+
+    /* ── Footer note ── */
+    .footer {
+      font-size: 11px;
+      color: #2d4260;
+      margin-top: 1rem;
+      line-height: 1.6;
+    }
+
+    /* ── Skeleton shimmer ── */
+    .skeleton {
+      background: linear-gradient(90deg, #1a2540 25%, #243050 50%, #1a2540 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: 4px;
+      display: inline-block;
+    }
+    @keyframes shimmer {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    @media (max-width: 480px) {
+      .card { padding: 1.75rem 1.5rem; }
+      .title { font-size: 12px; }
     }
   </style>
 </head>
-
 <body>
+  <div class="stars"></div>
+  <div class="pixel-grid"></div>
 
-<div class="box">
+  <div class="card">
+    <div class="block-wrap">
+      <div class="block">
+        <div class="block-top"></div>
+        <div class="block-bottom"></div>
+      </div>
+    </div>
 
-<h1>The Crews SMP!</h1>
+    <h1 class="title">The Crews SMP</h1>
+    <p class="subtitle">A vanilla Minecraft SMP kept alive by the community.</p>
 
-<p>
-A vanilla Minecraft SMP 
-  kept alive by the community.
-</p>
+    <div class="badges">
+      <span class="badge badge-green" id="status-badge">
+        <span class="dot" id="status-dot"></span>
+        <span id="status-text">Checking…</span>
+      </span>
+      <span class="badge badge-blue" id="players-badge">
+        &#128101; <span id="players-text"><span class="skeleton" style="width:60px;height:12px;"></span></span>
+      </span>
+    </div>
 
-<p>
-Server Status: Alive
-</p>
+    <div class="info-grid">
+      <div class="info-cell">
+        <div class="info-label">Server IP</div>
+        <div class="info-value" id="ip-cell">—</div>
+      </div>
+      <div class="info-cell">
+        <div class="info-label">Version</div>
+        <div class="info-value" id="version-cell"><span class="skeleton" style="width:50px;height:12px;"></span></div>
+      </div>
+      <div class="info-cell">
+        <div class="info-label">Software</div>
+        <div class="info-value">Paper 1.21.11</div>
+      </div>
+      <div class="info-cell">
+        <div class="info-label">Last checked</div>
+        <div class="info-value" id="time-cell">—</div>
+      </div>
+    </div>
 
-<button onclick="renewServer()">
-Renew Server
-</button>
+    <hr />
 
-</div>
+    <a class="renew-btn" href="https://game4free.net/allmyfellassmp" target="_blank" rel="noopener">
+      <span class="btn-icon">&#x21BB;</span>
+      Renew Server
+    </a>
 
-<script>
-function renewServer() {
-  window.location.href =
-  "https://game4free.net/allmyfellassmp";
-}
-</script>
+    <p class="footer">Members only &middot; Renewal keeps the server running for another month</p>
+  </div>
 
+  <script>
+    // ── CONFIG ── Replace with your actual server address ──
+    const SERVER_ADDRESS = 'thecrewssmp.game4free.net';
+
+    const statusBadge  = document.getElementById('status-badge');
+    const statusDot    = document.getElementById('status-dot');
+    const statusText   = document.getElementById('status-text');
+    const playersText  = document.getElementById('players-text');
+    const versionCell  = document.getElementById('version-cell');
+    const ipCell       = document.getElementById('ip-cell');
+    const timeCell     = document.getElementById('time-cell');
+
+    function setTime() {
+      const now = new Date();
+      timeCell.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    async function fetchStatus() {
+      try {
+        const res = await fetch(`https://api.mcsrvstat.us/3/${SERVER_ADDRESS}`, {
+          headers: { 'User-Agent': 'TheCrewsSMP-GithubPage/1.0' }
+        });
+        const data = await res.json();
+
+        if (data.online) {
+          statusText.textContent = 'Online';
+          statusDot.classList.remove('offline');
+          statusBadge.style.background = 'var(--badge-on)';
+          statusBadge.style.color      = 'var(--badge-on-t)';
+          statusBadge.style.borderColor = 'var(--badge-on-b)';
+
+          const online = data.players?.online ?? 0;
+          const max    = data.players?.max    ?? 20;
+          playersText.textContent = `${online} / ${max} players`;
+
+          versionCell.textContent = data.version ?? 'Paper 1.21.1';
+          ipCell.textContent      = SERVER_ADDRESS;
+        } else {
+          statusText.textContent = 'Offline';
+          statusDot.classList.add('offline');
+          statusBadge.style.background  = '#200f0f';
+          statusBadge.style.color       = '#e24b4a';
+          statusBadge.style.borderColor = '#4a1515';
+
+          playersText.textContent = '0 / 20 players';
+          versionCell.textContent = 'Paper 1.21.1';
+          ipCell.textContent      = SERVER_ADDRESS;
+        }
+      } catch (err) {
+        statusText.textContent  = 'Unknown';
+        playersText.textContent = '— players';
+        versionCell.textContent = 'Paper 1.21.1';
+        ipCell.textContent      = SERVER_ADDRESS;
+        console.warn('Status fetch failed:', err);
+      }
+      setTime();
+    }
+
+    fetchStatus();
+    // Refresh every 5 minutes (API caches for 5 min anyway)
+    setInterval(fetchStatus, 5 * 60 * 1000);
+  </script>
 </body>
 </html>
