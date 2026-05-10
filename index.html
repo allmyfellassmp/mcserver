@@ -331,7 +331,7 @@
 
     async function fetchStatus() {
       try {
-        const res = await fetch(`https://api.mcsrvstat.us/3/${SERVER_ADDRESS}`, {
+        const res = await fetch(`https://api.mcstatus.io/v2/status/java/${SERVER_ADDRESS}`, {
           headers: { 'User-Agent': 'TheCrewsSMP-GithubPage/1.0' }
         });
         const data = await res.json();
@@ -372,7 +372,7 @@
 
     fetchStatus();
     // Refresh every 5 minutes (API caches for 5 min anyway)
-    setInterval(fetchStatus, 5 * 60 * 1000);
+    setInterval(fetchStatus, 60 * 1000);
   </script>
 </body>
 </html>
